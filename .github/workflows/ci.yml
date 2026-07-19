@@ -1,10 +1,20 @@
-name: CI
+name: CI/CD
 
 on:
   push:
     branches: [dev]
   pull_request:
     branches: [dev]
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: Deploy current branch to production server
+        required: true
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
 
 concurrency:
   group: portfolio-${{ github.ref }}
@@ -37,3 +47,56 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+  deploy:
+    name: Deploy To Production Server
+    needs: verify
+    if: github.event_name == 'workflow_dispatch' && inputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create Release Archive
+        run: |
+          tar \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='apps/web/node_modules' \
+            --exclude='apps/web/.next' \
+            --exclude='apps/web/.next-*' \
+            --exclude='.turbo' \
+            --exclude='.data' \
+            --exclude='*.log' \
+            -czf release.tar.gz .
+
+      - name: Upload Release To Server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          password: ${{ secrets.PROD_PASSWORD }}
+          port: ${{ secrets.PROD_PORT || 22 }}
+          source: release.tar.gz
+          target: /tmp
+          overwrite: true
+
+      - name: Deploy With Docker Compose
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          password: ${{ secrets.PROD_PASSWORD }}
+          port: ${{ secrets.PROD_PORT || 22 }}
+          script: |
+            set -e
+            APP_DIR=/opt/skybox005000-portfolio
+            mkdir -p "$APP_DIR"
+            find "$APP_DIR" -mindepth 1 -maxdepth 1 ! -name '.data' -exec rm -rf {} +
+            tar -xzf /tmp/release.tar.gz -C "$APP_DIR"
+            cd "$APP_DIR"
+            docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
+            docker image prune -f
+            rm -f /tmp/release.tar.gz
