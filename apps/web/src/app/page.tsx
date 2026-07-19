@@ -62,7 +62,7 @@ export default async function Home() {
             <a className="button" href="/assistant">
               Ask Portfolio AI
             </a>
-            <a className="button" href="/resume">
+            <a className="button" href={resumePath} target="_blank" rel="noreferrer">
               View Resume
             </a>
           </div>
