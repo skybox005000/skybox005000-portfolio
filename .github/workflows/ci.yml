@@ -61,7 +61,7 @@ jobs:
             --exclude='.turbo' \
             --exclude='.data' \
             --exclude='*.log' \
-            -czf release.tar.gz .
+            -czf "$RUNNER_TEMP/release.tar.gz" .
 
       - name: Upload Release To Server
         uses: appleboy/scp-action@v0.1.7
@@ -70,7 +70,7 @@ jobs:
           username: ${{ secrets.PROD_USER }}
           password: ${{ secrets.PROD_PASSWORD }}
           port: ${{ secrets.PROD_PORT || 22 }}
-          source: release.tar.gz
+          source: ${{ runner.temp }}/release.tar.gz
           target: /tmp
           overwrite: true
 
