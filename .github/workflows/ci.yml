@@ -89,6 +89,6 @@ jobs:
             find "$APP_DIR" -mindepth 1 -maxdepth 1 ! -name '.data' -exec rm -rf {} +
             tar -xzf /tmp/release.tar.gz -C "$APP_DIR"
             cd "$APP_DIR"
-            docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
+            docker compose -p daryl-advanced-portfolio -f docker-compose.prod.yml up -d --build --remove-orphans
             docker image prune -f
             rm -f /tmp/release.tar.gz
