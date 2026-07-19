@@ -1,5 +1,7 @@
 import { Nav } from "@/components/nav";
 import { featuredProjects, profile } from "@portfolio/config";
+import { recordProfileView } from "@portfolio/database";
+import { headers } from "next/headers";
 
 const terminalLines = [
   "$ whoami",
@@ -15,7 +17,23 @@ const terminalLines = [
   profile.github,
 ];
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+function getVisitorIp(requestHeaders: Headers) {
+  return (
+    requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    requestHeaders.get("x-real-ip") ||
+    requestHeaders.get("cf-connecting-ip") ||
+    "local"
+  );
+}
+
+export default async function Home() {
+  const requestHeaders = await headers();
+  const profileStats = await recordProfileView(
+    getVisitorIp(requestHeaders),
+  ).catch(() => ({ views: 0 }));
+
   return (
     <main className="shell">
       <Nav />
@@ -26,7 +44,10 @@ export default function Home() {
           <h1>{profile.name}</h1>
           <p className="lead">{profile.summary}</p>
           <div className="actions">
-            <a className="button primary" href="/signal?type=recruiter_interest">
+            <a
+              className="button primary"
+              href="/signal?type=recruiter_interest"
+            >
               Recruit or Collaborate
             </a>
             <a className="button" href="/matcher">
@@ -42,6 +63,13 @@ export default function Home() {
       </section>
 
       <section className="grid">
+        <article className="card">
+          <div className="metric">{profileStats.views}</div>
+          <h3>Unique Profile Views</h3>
+          <p className="muted">
+            Counted from unique visitor IPs on the deployed portfolio.
+          </p>
+        </article>
         <article className="card">
           <div className="metric">5+ Years</div>
           <h3>Accenture Delivery</h3>
@@ -118,13 +146,11 @@ export default function Home() {
         |
 Next.js Portfolio + Recruiter Mode
         |
-Domain services -> PostgreSQL + pgvector
-        |                  |
-Background worker      AI providers
+Local JSON activity store
         |
-GitHub + CI/CD webhooks
+Dashboard insights + contact signals
         |
-OpenTelemetry -> traces, metrics, logs`}</pre>
+Docker deployment on Linux`}</pre>
         </div>
       </section>
 
@@ -144,8 +170,14 @@ OpenTelemetry -> traces, metrics, logs`}</pre>
       </section>
 
       <footer className="footer">
-        2026 {profile.name} - {profile.email} -{" "}
-        <a href={profile.linkedin}>LinkedIn</a>
+        <div>
+          <strong>{profile.name}</strong>
+          <span>Full Stack and Generative AI Engineer</span>
+        </div>
+        <div className="footer-links">
+          <a href={`mailto:${profile.email}`}>{profile.email}</a>
+          <a href={profile.linkedin}>LinkedIn</a>
+        </div>
       </footer>
     </main>
   );
