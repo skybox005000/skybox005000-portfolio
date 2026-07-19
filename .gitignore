@@ -1,0 +1,15 @@
+node_modules
+.next
+.next-*
+dist
+.env
+.env.local
+coverage
+*.log
+*.tsbuildinfo
+.DS_Store
+.data
+.turbo
+.validation*
+*.zip
+*.tar.gz

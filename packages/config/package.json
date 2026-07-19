@@ -1,0 +1,1 @@
+{"name":"@portfolio/config","private":true,"type":"module","exports":"./src/index.ts","scripts":{"build":"tsc","lint":"echo config lint","typecheck":"tsc --noEmit","test":"node --test"},"devDependencies":{"typescript":"^5.8.3"}}

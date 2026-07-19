@@ -1,0 +1,1 @@
+{"name":"@portfolio/contracts","private":true,"type":"module","exports":"./src/index.ts","scripts":{"build":"tsc","lint":"echo contracts lint","typecheck":"tsc --noEmit","test":"node --test"},"dependencies":{"zod":"^3.25.76"},"devDependencies":{"typescript":"^5.8.3"}}
