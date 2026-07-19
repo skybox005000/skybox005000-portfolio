@@ -21,6 +21,10 @@ Then open:
 http://localhost:3000
 ```
 
+## GenAI Integration
+
+Ask Portfolio AI and Job Match can generate grounded responses from retrieved portfolio evidence. Set the AI provider secret locally or in GitHub Actions before deploying.
+
 ## Useful Commands
 
 ```bash

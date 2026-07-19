@@ -1,6 +1,6 @@
 export const profile = {
   name: "Daryl John Jeannoh Bravo",
-  title: "Full Stack & Generative AI Engineer",
+  title: "Full-Stack and Generative AI Engineer",
   location: "Malolos City, Philippines",
   phone: "(+63) 921 819 6557",
   email: "daryl.bravo06@gmail.com",
@@ -8,16 +8,16 @@ export const profile = {
   github: "skybox005000",
   focus: [
     "End-to-End Engineering",
-    "Full Stack",
-    "GenAI & Agentic AI",
-    "Cloud & DevOps",
-    "Production delivery",
+    "Full-Stack Engineering",
+    "GenAI and Agentic AI",
+    "Cloud and DevOps",
+    "Production Delivery",
   ],
   summary:
-    "Full Stack and Generative AI Engineer with 5+ years of progressive experience at Accenture, combining software engineering depth with hands-on GenAI, agentic AI, cloud, and DevOps expertise. Pioneered GenAI integration initiatives within Accenture and progressed from technology R&D to building enterprise AI solutions in an engagement supporting Google.",
+    "Full-stack and Generative AI engineer building production-ready AI, automation, cloud, and full-stack solutions from prototype to deployment. Combines hands-on engineering depth with GenAI delivery, agentic workflows, DevOps execution, and the ability to turn ambiguous business problems into working systems.",
   expertise: [
     {
-      area: "Full Stack",
+      area: "Full-Stack Engineering",
       skills: [
         "Python",
         "JavaScript/TypeScript",
@@ -30,7 +30,7 @@ export const profile = {
       ],
     },
     {
-      area: "GenAI & Agentic AI",
+      area: "GenAI and Agentic AI",
       skills: [
         "Azure OpenAI",
         "OpenAI",
@@ -43,7 +43,7 @@ export const profile = {
       ],
     },
     {
-      area: "Cloud & DevOps",
+      area: "Cloud and DevOps",
       skills: [
         "GCP",
         "Azure",
@@ -72,7 +72,7 @@ export const profile = {
         "Build full-stack GenAI and agentic solutions for enterprise automation, productivity, and workflow challenges using Python, React/Next.js, Gemini, Vertex AI, APIs, Google Workspace, G3, and Google ADK.",
     },
     {
-      role: "Full Stack GenAI Engineer",
+      role: "Full-Stack GenAI Engineer",
       organization: "Accenture",
       period: "2022-2024",
       summary:
@@ -90,7 +90,7 @@ export const profile = {
     "Hackathon SME for Azure OpenAI integration and GenAI solution implementation.",
     "1st placer in Accenture Ideas to Outcome innovation competition.",
     "BSIT graduate from Bulacan State University; Best in Programming recognition.",
-    "Completed Java Full Stack Developer School through Accenture.",
+    "Completed Java Full-Stack Developer School through Accenture.",
   ],
 };
 
@@ -125,7 +125,7 @@ export const featuredProjects = [
   },
   {
     slug: "accessorial-fee-checker",
-    name: "Invoice Validation / Accessorial Fee Checker",
+    name: "Invoice Validation and Accessorial Fee Checker",
     summary:
       "AI-assisted workflow for identifying and validating accessorial fees against defined business rules.",
     stack: ["Python", "Angular", "Azure OpenAI"],
