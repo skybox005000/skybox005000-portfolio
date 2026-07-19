@@ -72,7 +72,7 @@ jobs:
           password: ${{ secrets.PROD_PASSWORD }}
           port: ${{ secrets.PROD_PORT || 22 }}
           source: release.tar.gz
-          target: /tmp
+          target: /tmp/portfolio-release-${{ github.run_id }}
           overwrite: true
 
       - name: Deploy With Docker Compose
@@ -85,10 +85,11 @@ jobs:
           script: |
             set -e
             APP_DIR=/opt/skybox005000-portfolio
+            RELEASE_DIR=/tmp/portfolio-release-${{ github.run_id }}
             mkdir -p "$APP_DIR"
             find "$APP_DIR" -mindepth 1 -maxdepth 1 ! -name '.data' -exec rm -rf {} +
-            tar -xzf /tmp/release.tar.gz -C "$APP_DIR"
+            tar -xzf "$RELEASE_DIR/release.tar.gz" -C "$APP_DIR"
             cd "$APP_DIR"
             docker compose -p daryl-advanced-portfolio -f docker-compose.prod.yml up -d --build --remove-orphans
             docker image prune -f
-            rm -f /tmp/release.tar.gz
+            rm -rf "$RELEASE_DIR"
