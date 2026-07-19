@@ -5,16 +5,7 @@ on:
     branches: [dev]
   pull_request:
     branches: [dev]
-  workflow_dispatch:
-    inputs:
-      deploy:
-        description: Deploy current branch to production server
-        required: true
-        default: "false"
-        type: choice
-        options:
-          - "false"
-          - "true"
+    types: [opened, synchronize, reopened, ready_for_review]
 
 concurrency:
   group: portfolio-${{ github.ref }}
@@ -51,7 +42,7 @@ jobs:
   deploy:
     name: Deploy To Production Server
     needs: verify
-    if: github.event_name == 'workflow_dispatch' && inputs.deploy == 'true'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
     environment: production
 
