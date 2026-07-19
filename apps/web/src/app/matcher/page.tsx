@@ -22,7 +22,7 @@ const evidence = [
 
 const scoringAreas = [
   {
-    name: "GenAI & agentic AI",
+    name: "GenAI and Agentic AI",
     terms: [
       "genai",
       "generative ai",
@@ -37,7 +37,7 @@ const scoringAreas = [
     ],
   },
   {
-    name: "Full stack",
+    name: "Full-Stack Engineering",
     terms: [
       "full stack",
       "python",
@@ -52,7 +52,7 @@ const scoringAreas = [
     ],
   },
   {
-    name: "Cloud & DevOps",
+    name: "Cloud and DevOps",
     terms: [
       "cloud",
       "gcp",
@@ -68,7 +68,7 @@ const scoringAreas = [
     ],
   },
   {
-    name: "Enterprise delivery",
+    name: "Enterprise Delivery",
     terms: [
       "production",
       "automation",
@@ -101,6 +101,8 @@ function scoreTerms(text: string, terms: string[]) {
 
 export default function Matcher() {
   const [description, setDescription] = useState("");
+  const [aiBrief, setAiBrief] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
 
   const result = useMemo(() => {
     const text = description.toLowerCase();
@@ -125,12 +127,64 @@ export default function Matcher() {
     return { areas, overall, topProjects };
   }, [description]);
 
+  async function generateBrief() {
+    if (description.trim().length < 20) {
+      setStatus("error");
+      setAiBrief("Paste a fuller job description first.");
+      return;
+    }
+
+    setStatus("loading");
+    setAiBrief("");
+
+    const scoreSummary = result.areas
+      .map(
+        (area) =>
+          `${area.name}: ${area.score}% match. Matched: ${area.matched.join(", ") || "none"}`,
+      )
+      .join("\n");
+    const response = await fetch("/api/portfolio-ai/role-fit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ description, scoreSummary }),
+    });
+
+    if (!response.ok || !response.body) {
+      const payload = await response.json().catch(() => ({}));
+      setStatus("error");
+      setAiBrief(payload.error || "AI generation is unavailable right now.");
+      return;
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+
+      if (done) {
+        break;
+      }
+
+      setAiBrief(
+        (current) => current + decoder.decode(value, { stream: true }),
+      );
+    }
+
+    setStatus("idle");
+  }
+
   return (
     <main className="shell">
       <Nav />
       <section className="section">
         <div className="eyebrow">Role Fit</div>
         <h1 style={{ fontSize: 52 }}>Job Match</h1>
+        <div className="actions tool-actions">
+          <a className="button" href="/assistant">
+            Ask Portfolio
+          </a>
+        </div>
         <p className="lead">
           Paste a role to compare its skills, platforms, and delivery needs
           against Daryl's portfolio experience.
@@ -138,43 +192,92 @@ export default function Matcher() {
         <div className="card form">
           <textarea
             className="textarea"
-            onChange={(event) => setDescription(event.target.value)}
+            onChange={(event) => {
+              setDescription(event.target.value);
+              setAiBrief("");
+              setStatus("idle");
+            }}
             placeholder="Paste a job description..."
             value={description}
           />
 
-          <div className="result">
-            <div>
-              <div className="eyebrow">Overall Match</div>
-              <div className="metric">{description ? result.overall : 0}%</div>
-            </div>
-            <div className="score-list">
-              {result.areas.map((area) => (
-                <div key={area.name}>
-                  <strong>{area.name}</strong>
-                  <div className="scorebar" aria-label={`${area.score}% match`}>
-                    <span style={{ width: `${description ? area.score : 0}%` }} />
+          <div className="ai-split">
+            <section className="insight-panel">
+              <div className="eyebrow">Semantic Search</div>
+              <h3>Match Score and Evidence</h3>
+              <div className="result compact-result">
+                <div>
+                  <div className="eyebrow">Overall Match</div>
+                  <div className="metric">
+                    {description ? result.overall : 0}%
                   </div>
-                  <p className="muted">
-                    {area.matched.length > 0
-                      ? `Matched: ${area.matched.join(", ")}`
-                      : "Paste a role that mentions skills, platforms, or delivery needs."}
-                  </p>
                 </div>
-              ))}
-            </div>
-          </div>
+                <div className="score-list">
+                  {result.areas.map((area) => (
+                    <div key={area.name}>
+                      <strong>{area.name}</strong>
+                      <div
+                        className="scorebar"
+                        aria-label={`${area.score}% match`}
+                      >
+                        <span
+                          style={{ width: `${description ? area.score : 0}%` }}
+                        />
+                      </div>
+                      <p className="muted">
+                        {area.matched.length > 0
+                          ? `Matched: ${area.matched.join(", ")}`
+                          : "Paste a role that mentions skills, platforms, or delivery needs."}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-          {result.topProjects.length > 0 ? (
-            <div>
-              <h3>Relevant Projects</h3>
-              {result.topProjects.map(({ project }) => (
-                <p className="muted" key={project.slug}>
-                  <strong>{project.name}</strong> - {project.summary}
+              <div>
+                <h3>Retrieved Projects</h3>
+                {result.topProjects.length > 0 ? (
+                  result.topProjects.map(({ project }) => (
+                    <p className="muted" key={project.slug}>
+                      <strong>{project.name}</strong> - {project.summary}
+                    </p>
+                  ))
+                ) : (
+                  <p className="muted">No project evidence retrieved yet.</p>
+                )}
+              </div>
+            </section>
+
+            <section className="insight-panel">
+              <div className="eyebrow">AI-Generated Brief</div>
+              <h3>Recruiter-Ready Summary</h3>
+              <p className="muted">
+                Generated from the match score and retrieved portfolio evidence.
+              </p>
+              <button
+                className="button primary"
+                disabled={
+                  status === "loading" || description.trim().length < 20
+                }
+                onClick={generateBrief}
+                type="button"
+              >
+                {status === "loading"
+                  ? "Generating..."
+                  : "Generate Recruiter Brief"}
+              </button>
+              <pre className="terminal">
+                {aiBrief ||
+                  "Generate an AI recruiter brief from the match score and retrieved portfolio evidence."}
+              </pre>
+              {status === "error" ? (
+                <p className="muted">
+                  Generated brief is unavailable right now. The match evidence
+                  remains visible on the left.
                 </p>
-              ))}
-            </div>
-          ) : null}
+              ) : null}
+            </section>
+          </div>
         </div>
       </section>
     </main>

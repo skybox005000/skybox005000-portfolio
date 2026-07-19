@@ -55,23 +55,17 @@ export default async function Dashboard() {
           <article className="card">
             <div className="metric">{profileStats.views}</div>
             <h3>Unique Profile Views</h3>
-            <p className="muted">
-              Tracked by unique visitor IP on the deployed site.
-            </p>
+            <p className="muted">Unique visitors on the deployed portfolio.</p>
           </article>
           <article className="card">
             <div className="metric">{signals.length}</div>
             <h3>Total Messages</h3>
-            <p className="muted">
-              Recruiting, referrals, opportunities, and feedback.
-            </p>
+            <p className="muted">All contact submissions.</p>
           </article>
           <article className="card">
             <div className="metric">{opportunityCount}</div>
             <h3>Active Opportunities</h3>
-            <p className="muted">
-              Recruiting, referral, and project opportunity submissions.
-            </p>
+            <p className="muted">Recruiting, referral, and project leads.</p>
           </article>
           <article className="card">
             <div className="metric">{latestSignal ? "New" : "None"}</div>

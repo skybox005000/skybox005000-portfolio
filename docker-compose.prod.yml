@@ -6,6 +6,8 @@ services:
     environment:
       NODE_ENV: production
       NEXT_PUBLIC_APP_URL: http://188.166.226.180
+      AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY:-}
+      AZURE_OPENAI_CHAT_COMPLETIONS_URL: ${AZURE_OPENAI_CHAT_COMPLETIONS_URL:-https://gpt-4-ls.openai.azure.com/openai/deployments/gpt-5-nano/chat/completions?api-version=2025-01-01-preview}
     ports:
       - "80:3000"
     restart: unless-stopped

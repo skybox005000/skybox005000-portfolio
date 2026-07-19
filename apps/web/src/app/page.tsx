@@ -3,18 +3,26 @@ import { featuredProjects, profile } from "@portfolio/config";
 import { recordProfileView } from "@portfolio/database";
 import { headers } from "next/headers";
 
+const resumePath = "/daryl-bravo-resume-2026.pdf";
+
 const terminalLines = [
   "$ whoami",
-  profile.title,
+  "Software Engineer at Accenture",
   "",
   "$ location",
   profile.location,
   "",
-  "$ focus",
-  ...profile.focus,
-  "",
   "$ github",
   profile.github,
+  "",
+  "$ linkedin",
+  "/in/darylbravo",
+  "",
+  "$ email",
+  profile.email,
+  "",
+  "$ phone",
+  profile.phone,
 ];
 
 export const dynamic = "force-dynamic";
@@ -30,9 +38,7 @@ function getVisitorIp(requestHeaders: Headers) {
 
 export default async function Home() {
   const requestHeaders = await headers();
-  const profileStats = await recordProfileView(
-    getVisitorIp(requestHeaders),
-  ).catch(() => ({ views: 0 }));
+  await recordProfileView(getVisitorIp(requestHeaders)).catch(() => null);
 
   return (
     <main className="shell">
@@ -40,7 +46,7 @@ export default async function Home() {
 
       <section className="hero">
         <div>
-          <div className="eyebrow">{profile.focus.join(" / ")}</div>
+          <div className="eyebrow">{profile.focus.join(" | ")}</div>
           <h1>{profile.name}</h1>
           <p className="lead">{profile.summary}</p>
           <div className="actions">
@@ -56,54 +62,50 @@ export default async function Home() {
             <a className="button" href="/assistant">
               Ask Portfolio AI
             </a>
+            <a className="button" href="/resume">
+              View Resume
+            </a>
           </div>
         </div>
 
-        <pre className="terminal">{terminalLines.join("\n")}</pre>
+        <pre className="terminal hero-terminal">{terminalLines.join("\n")}</pre>
       </section>
 
       <section className="grid">
         <article className="card">
-          <div className="metric">{profileStats.views}</div>
-          <h3>Unique Profile Views</h3>
+          <div className="metric">2021</div>
+          <h3>Accenture Growth</h3>
           <p className="muted">
-            Counted from unique visitor IPs on the deployed portfolio.
-          </p>
-        </article>
-        <article className="card">
-          <div className="metric">5+ Years</div>
-          <h3>Accenture Delivery</h3>
-          <p className="muted">
-            Progressive experience from technology R&D to enterprise GenAI
-            engineering in an engagement supporting Google.
+            Started September 2021 and moved from R&D prototypes into enterprise
+            delivery ownership.
           </p>
         </article>
         <article className="card">
           <div className="metric">AI</div>
-          <h3>GenAI and Agents</h3>
+          <h3>Workflow AI</h3>
           <p className="muted">
-            Azure OpenAI, OpenAI, Gemini, Vertex AI, prompt engineering, LLM
-            integration, AI agents, and Google ADK.
+            Built generators, ticket analyzers, document reviewers, and invoice
+            validation workflows.
           </p>
         </article>
         <article className="card">
-          <div className="metric">Cloud</div>
-          <h3>Production Readiness</h3>
+          <div className="metric">Ship</div>
+          <h3>Production Habits</h3>
           <p className="muted">
-            GCP, Azure, AWS, Docker, Kubernetes, Linux, Nginx, CI/CD, GitHub
-            Actions, Jenkins, and operational troubleshooting.
+            Covers deployment, CI/CD, Linux troubleshooting, compliance checks,
+            and production support.
           </p>
         </article>
       </section>
 
       <section className="section">
         <div className="eyebrow">Core Technical Expertise</div>
-        <h2>Technical Strengths</h2>
+        <h2>Toolbox</h2>
         <div className="grid">
           {profile.expertise.map((group) => (
             <article className="card" key={group.area}>
               <h3>{group.area}</h3>
-              <p className="muted">{group.skills.join(" / ")}</p>
+              <p className="muted">{group.skills.join(", ")}</p>
             </article>
           ))}
         </div>
@@ -126,13 +128,13 @@ export default async function Home() {
 
       <section id="work" className="section">
         <div className="eyebrow">Key Projects</div>
-        <h2>Enterprise AI, Automation, and Cloud Delivery</h2>
+        <h2>Selected Work</h2>
         <div className="grid">
           {featuredProjects.map((project) => (
             <article className="card" key={project.slug}>
               <h3>{project.name}</h3>
               <p className="muted">{project.summary}</p>
-              <p className="eyebrow">{project.stack.join(" / ")}</p>
+              <p className="eyebrow">{project.stack.join(", ")}</p>
             </article>
           ))}
         </div>
@@ -140,17 +142,29 @@ export default async function Home() {
 
       <section id="architecture" className="section">
         <div className="eyebrow">Platform Architecture</div>
-        <h2>How This Portfolio Is Built</h2>
-        <div className="card">
-          <pre className="terminal">{`Visitor / Recruiter
+        <h2>System Flow</h2>
+        <div className="card architecture-card">
+          <pre className="terminal">{`Visitor or Recruiter
         |
-Next.js Portfolio + Recruiter Mode
+Next.js Portfolio UI
         |
-Local JSON activity store
++----------------------+----------------------+
+|                      |                      |
+Role Fit              Ask Portfolio          Contact and Dashboard
+|                      |                      |
+Semantic search       Semantic search        Contact form
+(match score,          (retrieved evidence)   + unique view tracking
+matched terms,         |                      |
+project evidence)      |                      |
+|                      |                      |
+AI-generated brief     AI-generated answer    Local JSON activity store
+(streamed response)    (streamed response)    |
+|                      |                      |
+Clear separation: search evidence first, generated response second
         |
-Dashboard insights + contact signals
+Dockerized Next.js app on Linux
         |
-Docker deployment on Linux`}</pre>
+Source changes -> CI checks -> server deployment`}</pre>
         </div>
       </section>
 
@@ -172,7 +186,7 @@ Docker deployment on Linux`}</pre>
       <footer className="footer">
         <div>
           <strong>{profile.name}</strong>
-          <span>Full Stack and Generative AI Engineer</span>
+          <span>Full-Stack and Generative AI Engineer</span>
         </div>
         <div className="footer-links">
           <a href={`mailto:${profile.email}`}>{profile.email}</a>
