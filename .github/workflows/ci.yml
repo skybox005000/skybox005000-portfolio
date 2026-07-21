@@ -90,7 +90,7 @@ jobs:
             find "$APP_DIR" -mindepth 1 -maxdepth 1 ! -name '.data' -exec rm -rf {} +
             tar -xzf "$RELEASE_DIR/release.tar.gz" -C "$APP_DIR"
             cd "$APP_DIR"
-            printf "%s\n" "AZURE_OPENAI_API_KEY=${{ secrets.AZURE_OPENAI_API_KEY }}" "AZURE_OPENAI_CHAT_COMPLETIONS_URL=https://gpt-4-ls.openai.azure.com/openai/deployments/gpt-5-nano/chat/completions?api-version=2025-01-01-preview" > .env
+            printf "%s\n" "APP_URL=${{ secrets.APP_URL }}" "AZURE_OPENAI_API_KEY=${{ secrets.AZURE_OPENAI_API_KEY }}" "AZURE_OPENAI_CHAT_COMPLETIONS_URL=${{ secrets.AZURE_OPENAI_CHAT_COMPLETIONS_URL }}" "DASHBOARD_PASSWORD=${{ secrets.DASHBOARD_PASSWORD }}" > .env
             docker compose -p daryl-advanced-portfolio -f docker-compose.prod.yml up -d --build --remove-orphans
             docker image prune -f
             rm -rf "$RELEASE_DIR"
