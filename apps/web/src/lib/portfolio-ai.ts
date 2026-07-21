@@ -5,9 +5,7 @@ type ChatMessage = {
   content: string;
 };
 
-const azureChatUrl =
-  process.env.AZURE_OPENAI_CHAT_COMPLETIONS_URL ||
-  "https://gpt-4-ls.openai.azure.com/openai/deployments/gpt-5-nano/chat/completions?api-version=2025-01-01-preview";
+const azureChatUrl = process.env.AZURE_OPENAI_CHAT_COMPLETIONS_URL;
 
 function normalize(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9+#.\s-]/g, " ");
@@ -96,7 +94,7 @@ export function retrievePortfolioContext(input: string, limit = 8) {
 export async function generatePortfolioText(messages: ChatMessage[]) {
   const apiKey = process.env.AZURE_OPENAI_API_KEY;
 
-  if (!apiKey) {
+  if (!apiKey || !azureChatUrl) {
     throw new Error("AI generation is not configured.");
   }
 
@@ -132,7 +130,7 @@ export async function generatePortfolioText(messages: ChatMessage[]) {
 export async function streamPortfolioText(messages: ChatMessage[]) {
   const apiKey = process.env.AZURE_OPENAI_API_KEY;
 
-  if (!apiKey) {
+  if (!apiKey || !azureChatUrl) {
     throw new Error("AI generation is not configured.");
   }
 
