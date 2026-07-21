@@ -2,7 +2,7 @@ export function Nav() {
   return (
     <nav className="nav">
       <a className="brand" href="/">
-        DJJB<span style={{ color: "var(--accent)" }}>.</span>
+        DXRYL<span className="brand-cursor">_</span>
       </a>
       <div className="nav-links">
         <a className="pill" href="/#work">
