@@ -327,6 +327,31 @@ a {
   padding-bottom: 0;
 }
 
+.highlights-card {
+  display: grid;
+  gap: 16px;
+}
+
+.highlights-card h2 {
+  margin: 0;
+}
+
+.highlights-card .button {
+  justify-self: start;
+  margin-top: 4px;
+}
+
+.highlights-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.highlights-list li {
+  margin: 0;
+}
+
 .footer {
   display: flex;
   align-items: center;
@@ -374,7 +399,7 @@ a {
     backdrop-filter: blur(12px);
   }
 
-.nav-links {
+  .nav-links {
     flex: 1;
     flex-wrap: nowrap;
     justify-content: flex-start;
@@ -445,7 +470,9 @@ a {
     padding: 18px;
     border-radius: 14px;
     font-size: 12px;
-  }.architecture-card {
+  }
+
+  .architecture-card {
     margin-bottom: 16px;
   }
 

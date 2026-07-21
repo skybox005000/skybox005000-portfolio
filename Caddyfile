@@ -1,5 +1,9 @@
+http://188.166.226.180 {
+  encode zstd gzip
+  reverse_proxy web:3000
+}
+
 {$DOMAIN:dxryl.xyz}, www.{$DOMAIN:dxryl.xyz} {
   encode zstd gzip
-
   reverse_proxy web:3000
 }

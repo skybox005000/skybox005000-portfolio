@@ -169,10 +169,10 @@ Source changes -> CI checks -> server deployment`}</pre>
       </section>
 
       <section className="section">
-        <div className="card">
+        <div className="card highlights-card">
           <div className="eyebrow">Career Highlights</div>
           <h2>Recognition and Training</h2>
-          <ul className="muted">
+          <ul className="muted highlights-list">
             {profile.highlights.map((highlight) => (
               <li key={highlight}>{highlight}</li>
             ))}
