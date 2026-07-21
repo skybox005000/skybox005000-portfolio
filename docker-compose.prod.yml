@@ -5,15 +5,32 @@ services:
       dockerfile: Dockerfile
     environment:
       NODE_ENV: production
-      APP_URL: ${APP_URL:-http://188.166.226.180}
+      APP_URL: ${APP_URL:-https://dxryl.xyz}
       AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY:?AZURE_OPENAI_API_KEY is required}
       AZURE_OPENAI_CHAT_COMPLETIONS_URL: ${AZURE_OPENAI_CHAT_COMPLETIONS_URL:?AZURE_OPENAI_CHAT_COMPLETIONS_URL is required}
       DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD:?DASHBOARD_PASSWORD is required}
-    ports:
-      - "80:3000"
+    expose:
+      - "3000"
     restart: unless-stopped
     volumes:
       - portfolio_signals:/app/apps/web/.data
 
+  caddy:
+    image: caddy:2-alpine
+    depends_on:
+      - web
+    environment:
+      DOMAIN: ${DOMAIN:-dxryl.xyz}
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
 volumes:
   portfolio_signals:
+  caddy_data:
+  caddy_config:
