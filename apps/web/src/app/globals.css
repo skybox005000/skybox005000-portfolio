@@ -291,6 +291,20 @@ a {
   border-bottom: 0;
 }
 
+.message-email {
+  display: block;
+  width: fit-content;
+  margin-top: 8px;
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}
+
+.reply-button {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 12px;
+}
+
 .architecture-card {
   margin-bottom: 16px;
 }
