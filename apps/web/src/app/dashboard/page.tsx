@@ -110,7 +110,19 @@ export default async function Dashboard() {
                   {latestSignal.organization ? (
                     <p className="muted">{latestSignal.organization}</p>
                   ) : null}
+                  <a
+                    className="message-email"
+                    href={`mailto:${latestSignal.email}?subject=${encodeURIComponent("Re: your portfolio message")}`}
+                  >
+                    {latestSignal.email}
+                  </a>
                   <p className="muted">{latestSignal.message}</p>
+                  <a
+                    className="button reply-button"
+                    href={`mailto:${latestSignal.email}?subject=${encodeURIComponent("Re: your portfolio message")}`}
+                  >
+                    Reply
+                  </a>
                 </>
               ) : (
                 <p className="muted">No latest message yet.</p>
@@ -131,7 +143,19 @@ export default async function Dashboard() {
                 {signal.organization ? (
                   <span className="muted">, {signal.organization}</span>
                 ) : null}
+                <a
+                  className="message-email"
+                  href={`mailto:${signal.email}?subject=${encodeURIComponent("Re: your portfolio message")}`}
+                >
+                  {signal.email}
+                </a>
                 <p className="muted">{signal.message}</p>
+                <a
+                  className="button reply-button"
+                  href={`mailto:${signal.email}?subject=${encodeURIComponent("Re: your portfolio message")}`}
+                >
+                  Reply
+                </a>
               </div>
             ))
           )}
